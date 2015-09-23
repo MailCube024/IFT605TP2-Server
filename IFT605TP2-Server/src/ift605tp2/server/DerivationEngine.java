@@ -6,8 +6,8 @@ package ift605tp2.server;
 import contracts.IDerivationCommands;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import udes.ds.agent.BasicEquation;
 import udes.ds.agent.Equation;
-import udes.ds.agent.SummativeEquation;
 
 /**
  *
@@ -21,8 +21,8 @@ public class DerivationEngine extends UnicastRemoteObject implements IDerivation
     }
 
     @Override
-    public boolean Derivate(String e) throws RemoteException {
-        return true;
+    public Equation Derivate(Equation e) throws RemoteException {
+        return new BasicEquation(3,2);
     }
 
 }
