@@ -5,16 +5,20 @@
  */
 package ift605tp2.server;
 
-import contracts.IDerivationCommands;
+import constants.Constants;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 
 /**
  *
  * @author Michaël
  */
 public class Server {
+
+    protected Server() throws RemoteException {
+        super();
+    }
 
     /**
      * @param args the command line arguments
@@ -25,17 +29,17 @@ public class Server {
         }
 
         try {
-            String name = "DerivationEngine";
-            IDerivationCommands engine = new DerivationEngine();
-            IDerivationCommands stub = (IDerivationCommands) UnicastRemoteObject.exportObject(engine, 0);
 
-            Registry registry = LocateRegistry.getRegistry();
-            registry.rebind(name, stub);
-            System.out.println("DerivationEngine bound");
+            DerivationEngine engine = new DerivationEngine();
+
+            Registry registry = LocateRegistry.createRegistry(Constants.RMI_PORT);
+            registry.rebind(Constants.DERIVATION_ENGINE_ID, engine);
+            System.out.println("Server is started");
 
         } catch (Exception e) {
-            System.err.println("DerivationServer Exception:");
+            System.out.println("Exception in Derivation server startup:");
             e.printStackTrace();
         }
     }
+
 }

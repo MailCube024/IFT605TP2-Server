@@ -3,8 +3,9 @@
  */
 package ift605tp2.server;
 
-import contracts.IDerivationCommands;
+import contracts.IDerivationCommand;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import udes.ds.agent.AbstractEquation;
 import udes.ds.agent.BasicEquation;
 import udes.ds.agent.Constant;
@@ -12,16 +13,17 @@ import udes.ds.agent.Equation;
 import udes.ds.agent.MultiplicativeEquation;
 import udes.ds.agent.SummativeEquation;
 
-
 /**
  *
  */
-public class DerivationEngine implements IDerivationCommands{
+public class DerivationEngine extends UnicastRemoteObject implements IDerivationCommand {
 
-    public DerivationEngine(){
+    private static final long serialVersionUID = 1L;
+
+    public DerivationEngine() throws RemoteException {
         super();
     }
-    
+
     @Override
     public Equation Derivate(Equation e) throws RemoteException {
         if (e instanceof AbstractEquation)
@@ -59,7 +61,7 @@ public class DerivationEngine implements IDerivationCommands{
         MultiplicativeEquation first = new MultiplicativeEquation(Derivate(e.getFirst()), e.getSecond());
         MultiplicativeEquation second = new MultiplicativeEquation(e.getFirst(), Derivate(e.getSecond()));
 
-        return new MultiplicativeEquation(first, second);
+        return new SummativeEquation(first, second);
     }
 
 }
