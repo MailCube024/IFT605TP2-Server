@@ -5,7 +5,7 @@
  */
 package ift605tp2.server;
 
-import ift605tp2.server.contracts.IDerivationCommands;
+import contracts.IDerivationCommands;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
