@@ -5,21 +5,24 @@ package ift605tp2.server;
 
 import contracts.IDerivationCommands;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import udes.ds.agent.Equation;
-
+import udes.ds.agent.SummativeEquation;
 
 /**
  *
  */
-public class DerivationEngine implements IDerivationCommands{
+public class DerivationEngine extends UnicastRemoteObject implements IDerivationCommands {
 
-    public DerivationEngine(){
+    private static final long serialVersionUID = 1L;
+
+    public DerivationEngine() throws RemoteException {
         super();
     }
-    
+
     @Override
-    public Equation Derivate(Equation e) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean Derivate(String e) throws RemoteException {
+        return true;
     }
-    
+
 }
