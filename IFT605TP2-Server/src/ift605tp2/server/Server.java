@@ -28,17 +28,18 @@ public class Server {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        if(System.getSecurityManager() == null){
+        if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
-        
+
         try {
-                    
+
             DerivationEngine engine = new DerivationEngine();
+
             Registry registry = LocateRegistry.createRegistry(Constants.RMI_PORT);
             registry.rebind(Constants.DERIVATION_ENGINE_ID, engine);
             System.out.println("Server is started");
-            
+
         } catch (Exception e) {
             System.out.println("Exception in Derivation server startup:");
             e.printStackTrace();
