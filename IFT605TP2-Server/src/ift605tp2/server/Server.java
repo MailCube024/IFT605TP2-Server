@@ -29,10 +29,9 @@ public class Server {
         }
 
         try {
-
             DerivationEngine engine = new DerivationEngine();
 
-            Registry registry = LocateRegistry.createRegistry(Constants.RMI_PORT);
+            Registry registry = LocateRegistry.getRegistry();
             registry.rebind(Constants.DERIVATION_ENGINE_ID, engine);
             System.out.println("Server is started");
 
