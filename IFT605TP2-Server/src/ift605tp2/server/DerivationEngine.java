@@ -16,7 +16,7 @@ import udes.ds.agent.SummativeEquation;
 /**
  *
  */
-public class DerivationEngine extends UnicastRemoteObject implements IDerivationCommand {
+public class DerivationEngine implements IDerivationCommand {
 
     private static final long serialVersionUID = 1L;
 
