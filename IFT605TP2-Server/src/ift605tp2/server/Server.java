@@ -6,7 +6,7 @@
 package ift605tp2.server;
 
 import constants.Constants;
-import contracts.IDerivationCommand;
+import contracts.IDerivationHandler;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -32,7 +32,7 @@ public class Server {
 
         try {
             DerivationEngine engine = new DerivationEngine();
-            IDerivationCommand stub = (IDerivationCommand) UnicastRemoteObject.exportObject(engine, 0);
+            IDerivationHandler stub = (IDerivationHandler) UnicastRemoteObject.exportObject(engine, 0);
 
             Registry registry = LocateRegistry.getRegistry();
             registry.rebind(Constants.DERIVATION_ENGINE_ID, stub);
