@@ -40,7 +40,7 @@ public class DerivationEngine implements IDerivationHandler {
                 m_storage.AddTask(t.getName(), t);
                 t.start();
                 t.join();
-
+                m_storage.RemoveTask(t.getName());
                 return worker.GetResult();
 
             } catch (InterruptedException ex) {

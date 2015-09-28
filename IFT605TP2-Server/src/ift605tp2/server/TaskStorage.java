@@ -46,4 +46,12 @@ public class TaskStorage implements ITaskStorage {
         return keys.toArray(new String[keys.size()]);
     }
 
+    @Override
+    public synchronized Thread GetTask(String name) {
+        if(m_mapWorkingTasks.containsKey(name)){
+            return m_mapWorkingTasks.get(name);
+        }
+        return null;
+    }
+
 }

@@ -12,6 +12,7 @@ package ift605tp2.server.contracts;
 public interface ITaskStorage {
     public boolean AddTask(String name, Thread t);
     public boolean RemoveTask(String name);
+    public Thread GetTask(String name);
     
     public String[] GetCurrentTasks();
 }

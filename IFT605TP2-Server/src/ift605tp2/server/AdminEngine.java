@@ -21,6 +21,8 @@ public class AdminEngine extends DerivationEngine implements IAdminHandler {
 
     @Override
     public boolean StopTask(String name) throws RemoteException {
+        Thread t = m_storage.GetTask(name);
+        t.interrupt();
         return m_storage.RemoveTask(name);
     }
 
