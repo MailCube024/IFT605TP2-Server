@@ -8,15 +8,23 @@ package ift605tp2.server;
 import contracts.IAdminHandler;
 import ift605tp2.server.contracts.ITaskStorage;
 import java.rmi.RemoteException;
+import java.util.Random;
 
 /**
  *
  * @author Michaël
  */
 public class AdminEngine extends DerivationEngine implements IAdminHandler {
+    private long m_adminKey = -1;
 
     public AdminEngine(ITaskStorage storage) throws RemoteException {
         super(storage);
+    
+        Random rand = new Random();
+        
+        do {
+            m_adminKey = rand.nextLong();
+        } while(m_adminKey == -1);
     }
 
     @Override
@@ -26,6 +34,9 @@ public class AdminEngine extends DerivationEngine implements IAdminHandler {
 
     @Override
     public boolean StopTask(String name, long adminKey) throws RemoteException {
+        if (adminKey != m_adminKey)
+            return false;
+        
         Thread t = m_storage.GetTask(name);
         t.interrupt();
         return m_storage.RemoveTask(name);
@@ -33,6 +44,9 @@ public class AdminEngine extends DerivationEngine implements IAdminHandler {
 
     @Override
     public String[] GetCurrentlyRunningTask(long adminKey) throws RemoteException {
+        if (adminKey != m_adminKey)
+            return null;
+        
         return m_storage.GetCurrentTasks();
     }
 }
