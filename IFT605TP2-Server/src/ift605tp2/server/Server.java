@@ -8,19 +8,25 @@ package ift605tp2.server;
 import constants.Constants;
 import contracts.IAdminHandler;
 import contracts.IDerivationHandler;
+import ift605tp2.server.contracts.ITaskStorage;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Michaël
  */
-public class Server {
+public class Server{
+
+    private Map<String, Thread> m_mapDerivateTasks;
 
     protected Server() throws RemoteException {
         super();
+        m_mapDerivateTasks = new HashMap<String, Thread>();
     }
 
     /**
@@ -32,16 +38,18 @@ public class Server {
         }
 
         try {
-            DerivationEngine engine = new DerivationEngine();
-            IDerivationHandler stub = (IDerivationHandler) UnicastRemoteObject.exportObject(engine, 0);
+            ITaskStorage storage = new TaskStorage();
             
-            AdminEngine adminEngine = new AdminEngine();
+            DerivationEngine engine = new DerivationEngine(storage);
+            IDerivationHandler stub = (IDerivationHandler) UnicastRemoteObject.exportObject(engine, 0);
+
+            AdminEngine adminEngine = new AdminEngine(storage);
             IAdminHandler adminStub = (IAdminHandler) UnicastRemoteObject.exportObject(adminEngine, 0);
 
             Registry registry = LocateRegistry.getRegistry();
             registry.rebind(Constants.DERIVATION_ENGINE_ID, stub);
             registry.rebind(Constants.ADMIN_ENGINE_ID, adminStub);
-            
+
             System.out.println("Server is started");
 
         } catch (Exception e) {

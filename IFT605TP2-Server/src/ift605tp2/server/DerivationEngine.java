@@ -4,7 +4,11 @@
 package ift605tp2.server;
 
 import contracts.IDerivationHandler;
+import ift605tp2.server.contracts.ITaskStorage;
+import ift605tp2.server.worker.DerivateWorker;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import udes.ds.agent.AbstractEquation;
 import udes.ds.agent.BasicEquation;
 import udes.ds.agent.Constant;
@@ -17,22 +21,38 @@ import udes.ds.agent.SummativeEquation;
  */
 public class DerivationEngine implements IDerivationHandler {
 
-    private static final long serialVersionUID = 1L;
+    private static final long WAITING_TIME = 5000L;
 
-    public DerivationEngine() throws RemoteException {
+    private static final long serialVersionUID = 1L;
+    protected ITaskStorage m_storage;
+
+    public DerivationEngine(ITaskStorage storage) throws RemoteException {
         super();
+        m_storage = storage;
     }
 
     @Override
     public Equation Derivate(Equation e) throws RemoteException {
         if (e instanceof AbstractEquation) {
-            return Derivate((AbstractEquation) e);
+            try {
+                DerivateWorker worker = new DerivateWorker((Equation e1) -> DerivateAbstract((AbstractEquation) e1), e);
+                Thread t = new Thread(worker);
+                m_storage.AddTask(t.getName(), t);
+                t.start();
+                t.join();
+
+                return worker.GetResult();
+
+            } catch (InterruptedException ex) {
+                return null;
+            }
         }
 
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private AbstractEquation Derivate(AbstractEquation e) {
+    private AbstractEquation DerivateAbstract(AbstractEquation e) {
+        CalculationWait();
         if (e instanceof Constant) {
             return Derivate((Constant) e);
         }
@@ -58,14 +78,21 @@ public class DerivationEngine implements IDerivationHandler {
     }
 
     private AbstractEquation Derivate(SummativeEquation e) {
-        return new SummativeEquation(Derivate(e.getFirst()), Derivate(e.getSecond()));
+        return new SummativeEquation(DerivateAbstract(e.getFirst()), DerivateAbstract(e.getSecond()));
     }
 
     private AbstractEquation Derivate(MultiplicativeEquation e) {
-        MultiplicativeEquation first = new MultiplicativeEquation(Derivate(e.getFirst()), e.getSecond());
-        MultiplicativeEquation second = new MultiplicativeEquation(e.getFirst(), Derivate(e.getSecond()));
+        MultiplicativeEquation first = new MultiplicativeEquation(DerivateAbstract(e.getFirst()), e.getSecond());
+        MultiplicativeEquation second = new MultiplicativeEquation(e.getFirst(), DerivateAbstract(e.getSecond()));
 
         return new SummativeEquation(first, second);
     }
 
+    private void CalculationWait() {
+        try {
+            Thread.sleep(WAITING_TIME);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DerivationEngine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

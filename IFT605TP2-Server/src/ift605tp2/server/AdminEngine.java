@@ -6,6 +6,7 @@
 package ift605tp2.server;
 
 import contracts.IAdminHandler;
+import ift605tp2.server.contracts.ITaskStorage;
 import java.rmi.RemoteException;
 
 /**
@@ -14,18 +15,17 @@ import java.rmi.RemoteException;
  */
 public class AdminEngine extends DerivationEngine implements IAdminHandler {
 
-    public AdminEngine() throws RemoteException {
-        super();
+    public AdminEngine(ITaskStorage storage) throws RemoteException {
+        super(storage);
     }
 
     @Override
     public boolean StopTask(String name) throws RemoteException {
-        return true;
+        return m_storage.RemoveTask(name);
     }
 
     @Override
-    public String[] GetCurrentlyRunningTask() throws RemoteException {
-        return new String[]{"T1", "T2", "T3", "T4", "T5"};
+    public String[] GetCurrentlyRunningTasks() throws RemoteException {
+        return m_storage.GetCurrentTasks();
     }
-
 }
