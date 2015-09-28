@@ -6,6 +6,7 @@
 package ift605tp2.server;
 
 import constants.Constants;
+import contracts.IAdminHandler;
 import contracts.IDerivationHandler;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -33,9 +34,14 @@ public class Server {
         try {
             DerivationEngine engine = new DerivationEngine();
             IDerivationHandler stub = (IDerivationHandler) UnicastRemoteObject.exportObject(engine, 0);
+            
+            AdminEngine adminEngine = new AdminEngine();
+            IAdminHandler adminStub = (IAdminHandler) UnicastRemoteObject.exportObject(adminEngine, 0);
 
             Registry registry = LocateRegistry.getRegistry();
             registry.rebind(Constants.DERIVATION_ENGINE_ID, stub);
+            registry.rebind(Constants.ADMIN_ENGINE_ID, adminStub);
+            
             System.out.println("Server is started");
 
         } catch (Exception e) {
