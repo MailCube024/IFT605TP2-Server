@@ -29,7 +29,7 @@ public class AdminEngine extends DerivationEngine implements IAdminHandler {
 
     @Override
     public long Connect(String username, String password) throws RemoteException {
-        return 2;
+        return m_adminKey;
     }
 
     @Override
