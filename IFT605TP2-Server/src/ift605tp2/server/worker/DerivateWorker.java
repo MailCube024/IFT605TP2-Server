@@ -5,6 +5,9 @@
  */
 package ift605tp2.server.worker;
 
+import ift605tp2.server.DerivationEngine;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import udes.ds.agent.Equation;
 
 /**
@@ -16,6 +19,7 @@ public class DerivateWorker implements Runnable {
     IDerivationMethod m_method;
     private Equation m_toDerivate;
     private volatile Equation m_result;
+    private final long WAITING_TIME = 10000L;
 
     public DerivateWorker(IDerivationMethod method, Equation toDerivate) {
         m_method = method;
@@ -28,7 +32,16 @@ public class DerivateWorker implements Runnable {
 
     @Override
     public void run() {
-        m_result = m_method.Derivate(m_toDerivate);
+        try {
+            CalculationWait();
+            m_result = m_method.Derivate(m_toDerivate);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DerivateWorker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void CalculationWait() throws InterruptedException {
+        Thread.sleep(WAITING_TIME);
     }
 
 }

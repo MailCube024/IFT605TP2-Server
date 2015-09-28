@@ -7,8 +7,6 @@ import contracts.IDerivationHandler;
 import ift605tp2.server.contracts.ITaskStorage;
 import ift605tp2.server.worker.DerivateWorker;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import udes.ds.agent.AbstractEquation;
 import udes.ds.agent.BasicEquation;
 import udes.ds.agent.Constant;
@@ -20,8 +18,6 @@ import udes.ds.agent.SummativeEquation;
  *
  */
 public class DerivationEngine implements IDerivationHandler {
-
-    private static final long WAITING_TIME = 5000L;
 
     private static final long serialVersionUID = 1L;
     protected ITaskStorage m_storage;
@@ -52,7 +48,6 @@ public class DerivationEngine implements IDerivationHandler {
     }
 
     private AbstractEquation DerivateAbstract(AbstractEquation e) {
-        CalculationWait();
         if (e instanceof Constant) {
             return Derivate((Constant) e);
         }
@@ -86,13 +81,5 @@ public class DerivationEngine implements IDerivationHandler {
         MultiplicativeEquation second = new MultiplicativeEquation(e.getFirst(), DerivateAbstract(e.getSecond()));
 
         return new SummativeEquation(first, second);
-    }
-
-    private void CalculationWait() {
-        try {
-            Thread.sleep(WAITING_TIME);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(DerivationEngine.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }
