@@ -20,14 +20,19 @@ public class AdminEngine extends DerivationEngine implements IAdminHandler {
     }
 
     @Override
-    public boolean StopTask(String name) throws RemoteException {
+    public long Connect(String username, String password) throws RemoteException {
+        return 2;
+    }
+
+    @Override
+    public boolean StopTask(String name, long adminKey) throws RemoteException {
         Thread t = m_storage.GetTask(name);
         t.interrupt();
         return m_storage.RemoveTask(name);
     }
 
     @Override
-    public String[] GetCurrentlyRunningTasks() throws RemoteException {
+    public String[] GetCurrentlyRunningTask(long adminKey) throws RemoteException {
         return m_storage.GetCurrentTasks();
     }
 }

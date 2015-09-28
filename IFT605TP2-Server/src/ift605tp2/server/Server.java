@@ -13,8 +13,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -22,11 +20,8 @@ import java.util.Map;
  */
 public class Server{
 
-    private Map<String, Thread> m_mapDerivateTasks;
-
     protected Server() throws RemoteException {
         super();
-        m_mapDerivateTasks = new HashMap<String, Thread>();
     }
 
     /**
