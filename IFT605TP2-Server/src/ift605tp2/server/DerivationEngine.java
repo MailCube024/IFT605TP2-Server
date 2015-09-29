@@ -4,7 +4,10 @@
 package ift605tp2.server;
 
 import contracts.IDerivationHandler;
+import ift605tp2.server.contracts.ITaskStorage;
+import ift605tp2.server.worker.DerivateWorker;
 import java.rmi.RemoteException;
+import udes.ds.agent.AbstractEquation;
 import udes.ds.agent.Equation;
 
 /**
@@ -13,19 +16,35 @@ import udes.ds.agent.Equation;
 public class DerivationEngine implements IDerivationHandler {
 
     private static final long serialVersionUID = 1L;
+    protected ITaskStorage m_storage;
 
-    public DerivationEngine() throws RemoteException {
+    public DerivationEngine(ITaskStorage storage) throws RemoteException {
         super();
+        m_storage = storage;
     }
 
     @Override
     public Equation Derivate(Equation e) throws RemoteException {
-        return e.derivate();
+        if (e instanceof AbstractEquation) {
+            try {
+                DerivateWorker worker = new DerivateWorker(e);
+                Thread t = new Thread(worker);
+                m_storage.AddTask(t.getName(), t);
+                t.start();
+                t.join();
+                m_storage.RemoveTask(t.getName());
+                return worker.GetResult();
+
+            } catch (InterruptedException ex) {
+                return null;
+            }
+        }
+
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     /*
-    private AbstractEquation Derivate(AbstractEquation e) {
-       
+    private AbstractEquation DerivateAbstract(AbstractEquation e) {
         if (e instanceof Constant) {
             return Derivate((Constant) e);
         }
@@ -44,9 +63,7 @@ public class DerivationEngine implements IDerivationHandler {
 
         //throw new UnsupportedOperationException("Not supported yet.");
     }
-    */
     
-    /*
     private AbstractEquation Derivate(Constant e) {
         return new Constant(0);
     }
@@ -56,12 +73,12 @@ public class DerivationEngine implements IDerivationHandler {
     }
 
     private AbstractEquation Derivate(SummativeEquation e) {
-        return new SummativeEquation(Derivate(e.getFirst()), Derivate(e.getSecond()));
+        return new SummativeEquation(DerivateAbstract(e.getFirst()), DerivateAbstract(e.getSecond()));
     }
 
     private AbstractEquation Derivate(MultiplicativeEquation e) {
-        MultiplicativeEquation first = new MultiplicativeEquation(Derivate(e.getFirst()), e.getSecond());
-        MultiplicativeEquation second = new MultiplicativeEquation(e.getFirst(), Derivate(e.getSecond()));
+        MultiplicativeEquation first = new MultiplicativeEquation(DerivateAbstract(e.getFirst()), e.getSecond());
+        MultiplicativeEquation second = new MultiplicativeEquation(e.getFirst(), DerivateAbstract(e.getSecond()));
 
         return new SummativeEquation(first, second);
     }
