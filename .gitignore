@@ -18,3 +18,5 @@ IFT605TP2-Server/dist/README.TXT
 IFT605TP2-Server/nbproject/private/config.properties
 IFT605TP2-Server/nbproject/private/private.properties
 IFT605TP2-Server/nbproject/private/private.xml
+/IFT605TP2-Server/build/
+/IFT605TP2-Server/dist/

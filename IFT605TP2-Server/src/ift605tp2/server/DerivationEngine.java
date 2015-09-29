@@ -5,12 +5,7 @@ package ift605tp2.server;
 
 import contracts.IDerivationHandler;
 import java.rmi.RemoteException;
-import udes.ds.agent.AbstractEquation;
-import udes.ds.agent.BasicEquation;
-import udes.ds.agent.Constant;
 import udes.ds.agent.Equation;
-import udes.ds.agent.MultiplicativeEquation;
-import udes.ds.agent.SummativeEquation;
 
 /**
  *
@@ -25,14 +20,12 @@ public class DerivationEngine implements IDerivationHandler {
 
     @Override
     public Equation Derivate(Equation e) throws RemoteException {
-        if (e instanceof AbstractEquation) {
-            return Derivate((AbstractEquation) e);
-        }
-
-        throw new UnsupportedOperationException("Not supported yet.");
+        return e.derivate();
     }
-
+    
+    /*
     private AbstractEquation Derivate(AbstractEquation e) {
+       
         if (e instanceof Constant) {
             return Derivate((Constant) e);
         }
@@ -45,10 +38,15 @@ public class DerivationEngine implements IDerivationHandler {
         if (e instanceof MultiplicativeEquation) {
             return Derivate((MultiplicativeEquation) e);
         }
+        
+        
+        return e.derivate();
 
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    */
+    
+    /*
     private AbstractEquation Derivate(Constant e) {
         return new Constant(0);
     }
@@ -67,5 +65,5 @@ public class DerivationEngine implements IDerivationHandler {
 
         return new SummativeEquation(first, second);
     }
-
+    */
 }
