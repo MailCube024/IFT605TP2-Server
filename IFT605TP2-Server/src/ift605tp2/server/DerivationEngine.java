@@ -8,11 +8,7 @@ import ift605tp2.server.contracts.ITaskStorage;
 import ift605tp2.server.worker.DerivateWorker;
 import java.rmi.RemoteException;
 import udes.ds.agent.AbstractEquation;
-import udes.ds.agent.BasicEquation;
-import udes.ds.agent.Constant;
 import udes.ds.agent.Equation;
-import udes.ds.agent.MultiplicativeEquation;
-import udes.ds.agent.SummativeEquation;
 
 /**
  *
@@ -31,7 +27,7 @@ public class DerivationEngine implements IDerivationHandler {
     public Equation Derivate(Equation e) throws RemoteException {
         if (e instanceof AbstractEquation) {
             try {
-                DerivateWorker worker = new DerivateWorker((Equation e1) -> DerivateAbstract((AbstractEquation) e1), e);
+                DerivateWorker worker = new DerivateWorker(e);
                 Thread t = new Thread(worker);
                 m_storage.AddTask(t.getName(), t);
                 t.start();
@@ -46,7 +42,8 @@ public class DerivationEngine implements IDerivationHandler {
 
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    
+    /*
     private AbstractEquation DerivateAbstract(AbstractEquation e) {
         if (e instanceof Constant) {
             return Derivate((Constant) e);
@@ -60,10 +57,13 @@ public class DerivationEngine implements IDerivationHandler {
         if (e instanceof MultiplicativeEquation) {
             return Derivate((MultiplicativeEquation) e);
         }
+        
+        
+        return e.derivate();
 
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    
     private AbstractEquation Derivate(Constant e) {
         return new Constant(0);
     }
@@ -82,4 +82,5 @@ public class DerivationEngine implements IDerivationHandler {
 
         return new SummativeEquation(first, second);
     }
+    */
 }

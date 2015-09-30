@@ -16,13 +16,11 @@ import udes.ds.agent.Equation;
  */
 public class DerivateWorker implements Runnable {
 
-    IDerivationMethod m_method;
     private Equation m_toDerivate;
     private volatile Equation m_result;
     private final long WAITING_TIME = 10000L;
 
-    public DerivateWorker(IDerivationMethod method, Equation toDerivate) {
-        m_method = method;
+    public DerivateWorker(Equation toDerivate) {
         m_toDerivate = toDerivate;
     }
 
@@ -34,7 +32,7 @@ public class DerivateWorker implements Runnable {
     public void run() {
         try {
             CalculationWait();
-            m_result = m_method.Derivate(m_toDerivate);
+            m_result = m_toDerivate.derivate();
         } catch (InterruptedException ex) {
             Logger.getLogger(DerivateWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
